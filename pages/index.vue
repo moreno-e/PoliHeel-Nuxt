@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <h1>PoliHeel</h1>
-    </div>
+  <div>
+    <h1>PoliHeel</h1>
+  </div>
 </template>
 
 <script setup>
