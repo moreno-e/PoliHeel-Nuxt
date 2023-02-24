@@ -26,4 +26,13 @@
 .router-link-exact-active {
     color: white
 }
+
+
+</style>
+
+<style>
+body {
+    font-family: 'Oxygen', sans-serif;
+    font-weight: 300;
+}
 </style>
