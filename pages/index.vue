@@ -8,33 +8,35 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
-    const { data } = await useFetch('/api/googlecivic');
-    const civicData = ref(data);
+    const { data: civicData } = await useFetch('/api/googlecivic');
+    const civicDataRef = ref(civicData);
 
+    // get a users members
     const getPartialOffices = () => {
       let { officialIndices: [lastOfficeIdx] } =
-        civicData.value.offices.find(office => office.name.includes('Governor of'));
+        civicDataRef.value.offices.find(office => office.name.includes('Governor of'));
 
       const adjustedIdx = lastOfficeIdx += 1;
-      const partialOffices = civicData.value.officials.slice(0, adjustedIdx);
+      const partialOffices = civicDataRef.value.officials.slice(0, adjustedIdx);
 
       return partialOffices;
     };
 
     const partialOffices = getPartialOffices();
 
+    // slice the members names to pass to wiki api for their image
     const getWikiNameParams = () => {
-      const srcs = partialOffices.map((office) => {
+      const params = partialOffices.map((office) => {
         const wikiURL = office.urls[1];
         const wikiName = wikiURL.slice(30);
 
         return wikiName;
       });
 
-      return srcs;
+      return params;
     };
 
+    // fetch current member images
     const nameParams = getWikiNameParams();
     const promises = [];
 
