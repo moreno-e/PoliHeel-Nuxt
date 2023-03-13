@@ -3,7 +3,7 @@
     <h1 class="text-center">
       Welcome to PoliHeel
     </h1>
-    <img :src="imgs[0].source" alt="hi">
+    <member-card :partial-offices="partialOffices" />
   </div>
 </template>
 
@@ -47,15 +47,13 @@
     }
 
     const responses = await Promise.all(promises);
-    const imgs = [];
 
-    for (const response of responses) {
+    for (const [index, response] of responses.entries()) {
       const { data } = response;
       const picture = ref(data);
 
-      imgs.push(picture.value.query.pages[0].original);
+      partialOffices[index].portrait = picture.value.query.pages[0].original;
     }
-
 </script>
 
 <style scoped>
