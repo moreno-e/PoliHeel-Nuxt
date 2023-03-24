@@ -3,7 +3,10 @@
     <h1 class="text-center">
       Welcome to PoliHeel
     </h1>
-    <member-card :partial-offices="partialOffices" />
+    <p class="text-xl text-center mt-6 mb-6">
+      Below contains your current executive and legislative members. Along with your state governor
+    </p>
+    <members-display :partial-offices="partialOffices" />
   </div>
 </template>
 
