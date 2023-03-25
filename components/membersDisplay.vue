@@ -1,47 +1,56 @@
+<!-- eslint-disable max-len -->
 <template>
   <div>
     <div class="grid grid-cols-2">
-      <h3 class="col-span-2 text-center ml-80 mr-80 text-3xl bg-carolina-navy w-auto rounded-md text-white">
+      <!-- eslint-disable-next-line max-len -->
+      <h3
+        class="col-span-2 ml-80 mr-80 w-auto rounded-md bg-carolina-navy text-center text-3xl text-white">
         U.S. President & Vice President
       </h3>
       <member-card :office-member="props.partialOffices[0]" />
       <member-card :office-member="props.partialOffices[1]" />
-      <h3 class="col-span-2 text-center ml-80 mr-80 text-3xl bg-carolina-navy w-auto rounded-md text-white">
+      <!-- eslint-disable-next-line max-len -->
+      <h3
+        class="col-span-2 ml-80 mr-80 w-auto rounded-md bg-carolina-navy text-center text-3xl text-white">
         Federal North Carolina State Senators
       </h3>
       <member-card :office-member="props.partialOffices[2]" />
       <member-card :office-member="props.partialOffices[3]" />
-      <h3 class="col-span-2 text-center ml-80 mr-80 text-3xl bg-carolina-navy w-auto rounded-md text-white">
+      <!-- eslint-disable-next-line max-len -->
+      <h3
+        class="col-span-2 ml-80 mr-80 w-auto rounded-md bg-carolina-navy text-center text-3xl text-white">
         Federal North Carolina Representative
       </h3>
-      <member-card class="col-span-2" :office-member="props.partialOffices[4]" />
-      <h3 class="col-span-2 text-center ml-80 mr-80 text-3xl bg-carolina-navy w-auto rounded-md text-white">
+      <member-card
+        class="col-span-2"
+        :office-member="props.partialOffices[4]" />
+      <!-- eslint-disable-next-line max-len -->
+      <h3
+        class="col-span-2 ml-80 mr-80 w-auto rounded-md bg-carolina-navy text-center text-3xl text-white">
         North Carolina State Governor
       </h3>
-      <member-card class="col-span-2" :office-member="props.partialOffices[5]" />
+      <member-card
+        class="col-span-2"
+        :office-member="props.partialOffices[5]" />
     </div>
   </div>
 </template>
 
-  <script setup>
-    const props = defineProps(['partial-offices']);
+<script setup>
+  const props = defineProps(['partial-offices']);
 
-    console.log('*** props ***'.toUpperCase(), props);
-    console.log('*** withing ***'.toUpperCase());
-  </script>
+  console.log('*** props ***'.toUpperCase(), props);
+  console.log('*** withing ***'.toUpperCase());
+</script>
 
-  <style  scoped>
+<style scoped>
   .router-link-exact-active {
-      color: white
+    color: white;
   }
+</style>
 
-
-  </style>
-
-  <style>
+<style>
   body {
-      font-family: 'Oxygen', sans-serif;
-
+    font-family: 'Oxygen', sans-serif;
   }
-  </style>
-
+</style>

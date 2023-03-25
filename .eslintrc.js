@@ -1,24 +1,39 @@
 module.exports = {
   root: true,
   env: {
+    browser: true,
     node: true,
   },
-  extends: ['@nuxt/eslint-config'],
+  extends: ['@nuxtjs/eslint-config-typescript', 'plugin:prettier/recommended'],
+  parser: 'vue-eslint-parser',
   parserOptions: {
-    'sourceType': 'module',
-    'requireConfigFile': false,
+    parser: '@typescript-eslint/parser',
   },
+  overrides: [
+    {
+      files: [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)',
+      ],
+      env: {
+        jest: true,
+      },
+    },
+  ],
   rules: {
-    'arrow-spacing': ['error', { before: true, after: true }],
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        bracketSameLine: true,
+        vueIndentScriptAndStyle: true,
+      },
+    ],
     'block-spacing': 'error',
     'comma-spacing': ['error', { before: false, after: true }],
     'eol-last': ['error', 'always'],
-    'vue/script-indent': ['error', 2, {
-      'baseIndent': 2,
-      'switchCase': 2,
-      'ignores': []
-    }],
     'key-spacing': 'error',
+    'keyword-spacing': ['error', { before: true, after: true }],
     'max-len': ['error', { code: 100, ignoreUrls: true }],
     'no-console': 'warn',
     'no-template-curly-in-string': 'error',
@@ -26,7 +41,6 @@ module.exports = {
     'no-var': 'error',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'object-curly-spacing': ['error', 'always'],
-    'keyword-spacing': ['error', { before: true, after: true }],
     'padding-line-between-statements': [
       'error',
       { blankLine: 'always', prev: '*', next: 'return' },
@@ -49,28 +63,23 @@ module.exports = {
     ],
     'space-unary-ops': ['error', { words: true, nonwords: false }],
     'spaced-comment': ['error', 'always'],
-    'vue/html-closing-bracket-newline': ['error', {
-      'singleline': 'never',
-      'multiline': 'never'
-    }],
-    'vue/max-attributes-per-line': ['error', {
-      'singleline': {
-        'max': 3
+    'vue/html-closing-bracket-newline': [
+      'error',
+      {
+        singleline: 'never',
+        multiline: 'never',
       },
-      'multiline': {
-        'max': 1
-      }
-    }]
+    ],
+    'vue/max-attributes-per-line': [
+      'error',
+      {
+        singleline: {
+          max: 2,
+        },
+        multiline: {
+          max: 1,
+        },
+      },
+    ],
   },
-  overrides: [
-    {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)',
-      ],
-      env: {
-        jest: true,
-      },
-    },
-  ],
 };
