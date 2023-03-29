@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+  const { data: ipData } = await useFetch('/api/ipstack');
+  const ipDataRef = ref(ipData);
+
   const { data: civicData } = await useFetch('/api/googlecivic');
   const civicDataRef = ref(civicData);
 
