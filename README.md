@@ -12,6 +12,11 @@ Originally a university personal project developed using react ([Github repo her
 - Google Civic API
 - Probulica API
 
+### Current Look
+- basic layout and design of home page. Images are produced via api call
+<img width="1429" alt="Screenshot 2023-03-29 at 5 07 08 PM" src="https://user-images.githubusercontent.com/42720283/228668321-b02e1c0d-1e00-42e5-8a80-ca155a932eca.png">
+
+
 ### Future Features
 - Prior to page load a users location is determined and passed to the Google Civic API. 
      - The resultant data will render basic information only the upper level legislators: President; Vice President; Senators; Representatives; and State Governor
