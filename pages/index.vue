@@ -1,66 +1,79 @@
 <template>
   <div>
-    <h1 class="text-center">
-      Welcome to PoliHeel
-    </h1>
-    <img :src="imgs[0].source" alt="hi">
+    <h1 class="text-center">Welcome to PoliHeel</h1>
+    <p class="mt-6 mb-6 text-center text-xl">
+      Below contains your current executive and legislative members. Along with
+      your state governor
+    </p>
+    <members-display :partial-offices="state.partialOffices" />
   </div>
 </template>
 
 <script setup>
-    const { data: civicData } = await useFetch('/api/googlecivic');
-    const civicDataRef = ref(civicData);
+  const state = reactive({
+    civicData: '',
+    partialOffices: [],
+    nameParams: '',
+    promises: [],
+    responses: '',
+  });
 
-    // get a users members
-    const getPartialOffices = () => {
-      let { officialIndices: [lastOfficeIdx] } =
-        civicDataRef.value.offices.find(office => office.name.includes('Governor of'));
+  const { data } = await useFetch('/api/googlecivic');
 
-      const adjustedIdx = lastOfficeIdx += 1;
-      const partialOffices = civicDataRef.value.officials.slice(0, adjustedIdx);
+  state.civicData = data;
 
-      return partialOffices;
-    };
+  // get a users members
+  const getPartialOffices = () => {
+    let {
+      officialIndices: [lastOfficeIdx],
+    } = state.civicData.offices.find((office) =>
+      office.name.includes('Governor of')
+    );
 
-    const partialOffices = getPartialOffices();
+    const adjustedIdx = (lastOfficeIdx += 1);
+    const partialOffices = state.civicData.officials.slice(0, adjustedIdx);
 
-    // slice the members names to pass to wiki api for their image
-    const getWikiNameParams = () => {
-      const params = partialOffices.map((office) => {
-        const wikiURL = office.urls[1];
-        const wikiName = wikiURL.slice(30);
+    return partialOffices;
+  };
 
-        return wikiName;
-      });
+  state.partialOffices = getPartialOffices();
 
-      return params;
-    };
+  // slice the members names to pass to wiki api for their image
+  const getWikiNameParams = () => {
+    const params = state.partialOffices.map((office) => {
+      const wikiURL = office.urls[1];
+      const wikiName = wikiURL.slice(30);
 
-    // fetch current member images
-    const nameParams = getWikiNameParams();
-    const promises = [];
+      return wikiName;
+    });
 
-    for (const name of nameParams) {
-      const uri = `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages|pageterms&piprop=original&titles=${name}`;
+    return params;
+  };
 
-      promises.push(useFetch(uri));
-    }
+  // fetch current member images
+  state.nameParams = getWikiNameParams();
+  state.promises = [];
 
-    const responses = await Promise.all(promises);
-    const imgs = [];
+  for (const name of state.nameParams) {
+    const uri = `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages|pageterms&piprop=original&titles=${name}`;
 
-    for (const response of responses) {
-      const { data } = response;
-      const picture = ref(data);
+    state.promises.push(useFetch(uri));
+  }
 
-      imgs.push(picture.value.query.pages[0].original);
-    }
+  state.responses = await Promise.all(state.promises);
 
+  for (const [index, response] of state.responses.entries()) {
+    const { data } = response;
+    const picture = ref(data);
+
+    state.partialOffices[index].portrait =
+      picture.value.query.pages[0].original;
+  }
 </script>
 
 <style scoped>
-h1 {
+  h1 {
     font-size: 5rem;
     font-weight: 300;
-}
+  }
 </style>

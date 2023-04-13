@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* to add extra components */
+@layer components {
+    .btn {
+      @apply bg-[#12b488] text-white px-3 py-2 rounded-md text-sm text-white;
+    }
+    .card {
+      /* @apply p-3 rounded-md bg-white shadow-md h-full; */
+      @apply flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700
+    }
+  }
