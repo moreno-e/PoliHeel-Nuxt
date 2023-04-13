@@ -1,25 +1,18 @@
 <template>
   <div>
-    <header class="shadow-sm bg-carolina-blue">
-      <nav class="container mx-auto p-4 flex justify-between text-carolina-navy">
-        <NuxtLink to="/" class="font-bold">
-          PoliHeel
-        </NuxtLink>
+    <header class="bg-carolina-blue shadow-sm">
+      <nav
+        class="container mx-auto flex justify-between p-4 text-carolina-navy">
+        <NuxtLink to="/" class="font-bold"> PoliHeel </NuxtLink>
         <ul class="flex gap-4">
           <li>
-            <NuxtLink to="/">
-              Home
-            </NuxtLink>
+            <NuxtLink to="/"> Home </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/about">
-              About
-            </NuxtLink>
+            <NuxtLink to="/about"> About </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/contact">
-              Contact
-            </NuxtLink>
+            <NuxtLink to="/contact"> Contact </NuxtLink>
           </li>
         </ul>
       </nav>
@@ -32,21 +25,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style  scoped>
-.router-link-exact-active {
-    color: white
-}
-
-
+<style scoped>
+  .router-link-exact-active {
+    color: white;
+  }
 </style>
 
 <style>
-body {
+  body {
     font-family: 'Oxygen', sans-serif;
-
-}
+  }
 </style>
