@@ -17,6 +17,13 @@
     promises: [],
     responses: '',
   });
+  const { data: ipStackData, error: ipStackError } = await useFetch(
+    '/api/ipstack'
+  );
+
+  if (ipStackError) {
+    throw new Error('ip fetch failed', { details: ipStackError });
+  }
 
   const { data } = await useFetch('/api/googlecivic');
 

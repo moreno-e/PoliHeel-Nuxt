@@ -38,9 +38,6 @@
 
 <script setup>
   const props = defineProps(['partial-offices']);
-
-  console.log('*** props ***'.toUpperCase(), props);
-  console.log('*** withing ***'.toUpperCase());
 </script>
 
 <style scoped>
