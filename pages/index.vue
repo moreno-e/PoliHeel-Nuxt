@@ -12,20 +12,43 @@
 <script setup>
   const state = reactive({
     civicData: '',
-    partialOffices: [],
+    ipStackData: '',
     nameParams: '',
+    partialOffices: [],
     promises: [],
+    processDev: 'dev',
+    processProd: 'production',
     responses: '',
+    randomZipCode: '',
+    queriedZipCode: '',
   });
-  const { data: ipStackData, error: ipStackError } = await useFetch(
-    '/api/ipstack'
-  );
 
-  if (ipStackError) {
-    throw new Error('ip fetch failed', { details: ipStackError });
+  const defaultZipCodes = [77449, 11368, 60629, 79936, 90011];
+  const defaultZipCode = () => {
+    const rndInt = Math.floor(Math.random() * 5) + 1;
+
+    return defaultZipCodes[rndInt];
+  };
+
+  try {
+    if (process.env.NODE_ENV === processProd) {
+      const { data, error: ipStackError } = await useFetch('/api/ipstack');
+
+      state.ipStackData = data;
+
+      if (state.ipStackData & (state.ipStackData !== null)) {
+        throw new Error('ip fetch failed', { details: ipStackError });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    state.queriedZipCode = state.ipStackData || defaultZipCode();
   }
 
-  const { data } = await useFetch('/api/googlecivic');
+  const { data } = await useFetch(`/api/googlecivic/`, {
+    params: { zip: state.queriedZipCode },
+  });
 
   state.civicData = data;
 
