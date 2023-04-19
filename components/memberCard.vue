@@ -23,7 +23,9 @@
 </template>
 
 <script setup>
-  const props = defineProps(['office-member']);
+  const props = defineProps(['office-member', 'index']);
+
+  // console.log('*** props ***'.toUpperCase(), props);
 </script>
 
 <style scoped>
