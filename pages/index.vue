@@ -21,16 +21,21 @@
     responses: '',
     randomZipCode: '',
     queriedZipCode: '',
+    queriedState: '',
   });
 
   // if there is an error with IPStack call use default zipcode
-  const defaultZipCodes = [77449, 11368, 60629, 79936, 90011];
-  const defaultZipCode = () => {
-    const rndInt = Math.floor(Math.random() * 5) + 1;
+  const defaultZipCodes = [
+    { stateOfZip: 'Texas', zipCode: 77449 },
+    { stateOfZip: 'New York', zipCode: 11368 },
+    { stateOfZip: 'Illinois', zipCode: 60629 },
+    { stateOfZip: 'California', zipCode: 9001 },
+  ];
 
-    // return defaultZipCodes[rndInt];
+  const defaultRandomZipCode = () => {
+    const rndInt = Math.floor(Math.random() * 3) + 1;
 
-    return 27614;
+    return defaultZipCodes[rndInt];
   };
 
   // ipstack call
@@ -48,7 +53,13 @@
   } catch (error) {
     console.error(error);
   } finally {
-    state.queriedZipCode = state.ipStackData || defaultZipCode();
+    // will have to pull zip code & state
+    const defaultStateZip = defaultRandomZipCode();
+
+    const { stateOfZip, zipCode } = defaultStateZip;
+
+    state.queriedZipCode = state.ipStackData || zipCode;
+    state.queriedState = stateOfZip;
   }
 
   // google civic api call to fetch members of zipcode
@@ -62,20 +73,6 @@
     console.error(error);
   }
 
-  // console.log('*** state.civicData ***'.toUpperCase(), state.civicData);
-
-  const getPartialOffices = () => {
-    // const officesSubset = [];
-    // for (const office of state.civicData.offices) {
-    //   if (office.name.includes('Governor')) break;
-    //   officesSubset.push({
-    //     name: office.name,
-    //     officialIndices: office.officialIndices,
-    //   });
-    // }
-    // return officesSubset;
-  };
-
   const checkForMissingTitles = () => {
     const subsetOfOffices = [];
 
@@ -83,8 +80,8 @@
       'President of the United States',
       'Vice President of the United States',
       'U.S. Representative',
-      'Governor',
-    ].forEach((title, index) => {
+      `Governor of ${state.queriedState}`,
+    ].forEach((title) => {
       const office = state.civicData.offices.find(
         (office) => office.name === title
       );
@@ -106,16 +103,20 @@
       (office) => office.name === 'U.S. Senator'
     );
 
-    console.log('*** senators ***'.toUpperCase(), senators);
-
     if (!senators) {
       const noSenator = { title: 'U.S. Senator', hasMember: false };
+      const senatorArrIdx = 2;
 
-      return subsetOfOffices.push(noSenator, noSenator);
+      subsetOfOffices.splice(senatorArrIdx, 0, noSenator);
+      subsetOfOffices.splice(senatorArrIdx + 1, 0, noSenator);
+
+      return subsetOfOffices;
     }
 
-    senators.officialIndices.forEach((senatorIndices) => {
-      subsetOfOffices.push({
+    senators.officialIndices.forEach((senatorIndices, index) => {
+      const senatorObjPlacement = 2 + index;
+
+      subsetOfOffices.splice(senatorObjPlacement, 0, {
         title: 'U.S. Senator',
         hasMember: true,
         ...state.civicData.officials[senatorIndices],
@@ -126,14 +127,11 @@
   };
 
   state.partialOffices = checkForMissingTitles();
-  console.log(
-    '*** state.partialOffices ***'.toUpperCase(),
-    state.partialOffices
-  );
 
   // slice the members names to pass to wiki api for their image
   const getWikiNameParams = () => {
     const params = state.partialOffices.map((office) => {
+      if (!office.hasMember) return '';
       const wikiURL = office.urls[1];
       const wikiName = wikiURL.slice(30);
 
@@ -160,8 +158,8 @@
     const picture = ref(data);
 
     state.partialOffices[index].portrait =
-      picture.value.query.pages[0].original ||
-      state.partialOffices[index].photoUrl ||
+      picture.value?.query?.pages[0].original ||
+      state.partialOffices[index]?.photoUrl ||
       `assets/default-member-photo.jpg`;
   }
 </script>
