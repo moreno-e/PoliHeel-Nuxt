@@ -3,16 +3,26 @@
     <header class="bg-carolina-blue shadow-sm">
       <nav
         class="container mx-auto flex justify-between p-4 text-carolina-navy">
-        <NuxtLink to="/" class="font-bold"> PoliHeel </NuxtLink>
+        <NuxtLink
+          to="/"
+          class="font-bold">
+          PoliHeel
+        </NuxtLink>
         <ul class="flex gap-4">
           <li>
-            <NuxtLink to="/"> Home </NuxtLink>
+            <NuxtLink to="/">
+              Home
+            </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/about"> About </NuxtLink>
+            <NuxtLink to="/about">
+              About
+            </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/contact"> Contact </NuxtLink>
+            <NuxtLink to="/contact">
+              Contact
+            </NuxtLink>
           </li>
         </ul>
       </nav>
