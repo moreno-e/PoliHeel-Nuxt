@@ -1,11 +1,14 @@
 <template>
   <div>
-    <h1 class="text-center">Welcome to PoliHeel</h1>
+    <h1 class="text-center">
+      Welcome to PoliHeel
+    </h1>
     <p class="mt-6 mb-6 text-center text-xl">
-      Below contains your current executive and legislative members. Along with
-      your state governor
+      Below contains your current executive and legislative members. Along with your state governor
     </p>
-    <members-display :partial-offices="state.partialOffices" />
+    <members-display
+      :partial-offices="state.partialOffices"
+      :member-state="state.queriedState" />
   </div>
 </template>
 
@@ -21,15 +24,14 @@
     responses: '',
     randomZipCode: '',
     queriedZipCode: '',
-    queriedState: '',
+    queriedState: ''
   });
 
   // if there is an error with IPStack call use default zipcode
   const defaultZipCodes = [
-    { stateOfZip: 'Texas', zipCode: 77449 },
-    { stateOfZip: 'New York', zipCode: 11368 },
-    { stateOfZip: 'Illinois', zipCode: 60629 },
-    { stateOfZip: 'California', zipCode: 9001 },
+    { stateOfZipCode: 'Texas', zipCode: 77449 },
+    { stateOfZipCode: 'New York', zipCode: 11368 },
+    { stateOfZipCode: 'Illinois', zipCode: 60629 }
   ];
 
   const defaultRandomZipCode = () => {
@@ -56,16 +58,16 @@
     // will have to pull zip code & state
     const defaultStateZip = defaultRandomZipCode();
 
-    const { stateOfZip, zipCode } = defaultStateZip;
+    const { stateOfZipCode, zipCode } = defaultStateZip;
 
     state.queriedZipCode = state.ipStackData || zipCode;
-    state.queriedState = stateOfZip;
+    state.queriedState = stateOfZipCode;
   }
 
   // google civic api call to fetch members of zipcode
   try {
     const { data } = await useFetch(`/api/googlecivic/`, {
-      params: { zip: state.queriedZipCode },
+      params: { zip: state.queriedZipCode }
     });
 
     state.civicData = data;
@@ -80,11 +82,9 @@
       'President of the United States',
       'Vice President of the United States',
       'U.S. Representative',
-      `Governor of ${state.queriedState}`,
+      `Governor of ${state.queriedState}`
     ].forEach((title) => {
-      const office = state.civicData.offices.find(
-        (office) => office.name === title
-      );
+      const office = state.civicData.offices.find(office => office.name === title);
 
       if (!office) {
         subsetOfOffices.push({ title, hasMember: false });
@@ -94,14 +94,11 @@
         subsetOfOffices.push({
           title,
           hasMember: true,
-          ...state.civicData.officials[officialIndices[0]],
+          ...state.civicData.officials[officialIndices[0]]
         });
       }
     });
-
-    const senators = state.civicData.offices.find(
-      (office) => office.name === 'U.S. Senator'
-    );
+    const senators = state.civicData.offices.find(office => office.name === 'U.S. Senator');
 
     if (!senators) {
       const noSenator = { title: 'U.S. Senator', hasMember: false };
@@ -119,7 +116,7 @@
       subsetOfOffices.splice(senatorObjPlacement, 0, {
         title: 'U.S. Senator',
         hasMember: true,
-        ...state.civicData.officials[senatorIndices],
+        ...state.civicData.officials[senatorIndices]
       });
     });
 
@@ -131,7 +128,7 @@
   // slice the members names to pass to wiki api for their image
   const getWikiNameParams = () => {
     const params = state.partialOffices.map((office) => {
-      if (!office.hasMember) return '';
+      if (!office.hasMember) { return ''; }
       const wikiURL = office.urls[1];
       const wikiName = wikiURL.slice(30);
 
@@ -157,10 +154,10 @@
     const { data } = response;
     const picture = ref(data);
 
-    state.partialOffices[index].portrait =
-      picture.value?.query?.pages[0].original ||
-      state.partialOffices[index]?.photoUrl ||
-      `assets/default-member-photo.jpg`;
+    state.partialOffices[index].portrait = picture.value?.query?.pages[0].original ||
+      state.partialOffices[index]?.photoUrl || {
+        source: `https://images.unsplash.com/photo-1611010638643-051de75362ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2865&q=80`
+      };
   }
 </script>
 

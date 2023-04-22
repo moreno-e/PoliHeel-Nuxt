@@ -7,19 +7,27 @@
         class="col-span-2 ml-80 mr-80 w-auto rounded-md bg-carolina-navy text-center text-3xl text-white">
         U.S. President & Vice President
       </h3>
-      <member-card :office-member="props.partialOffices[0]" :index="0" />
-      <member-card :office-member="props.partialOffices[1]" :index="1" />
+      <member-card
+        :office-member="props.partialOffices[0]"
+        :index="0" />
+      <member-card
+        :office-member="props.partialOffices[1]"
+        :index="1" />
       <!-- eslint-disable-next-line max-len -->
       <h3
         class="col-span-2 ml-80 mr-80 w-auto rounded-md bg-carolina-navy text-center text-3xl text-white">
-        Federal North Carolina State Senators
+        Federal {{ props.memberState }} State Senators
       </h3>
-      <member-card :office-member="props.partialOffices[2]" :index="2" />
-      <member-card :office-member="props.partialOffices[3]" :index="3" />
+      <member-card
+        :office-member="props.partialOffices[2]"
+        :index="2" />
+      <member-card
+        :office-member="props.partialOffices[3]"
+        :index="3" />
       <!-- eslint-disable-next-line max-len -->
       <h3
         class="col-span-2 ml-80 mr-80 w-auto rounded-md bg-carolina-navy text-center text-3xl text-white">
-        Federal North Carolina Representative
+        Federal {{ props.memberState }} Representative
       </h3>
       <member-card
         class="col-span-2"
@@ -28,7 +36,7 @@
       <!-- eslint-disable-next-line max-len -->
       <h3
         class="col-span-2 ml-80 mr-80 w-auto rounded-md bg-carolina-navy text-center text-3xl text-white">
-        North Carolina State Governor
+        {{ props.memberState }} State Governor
       </h3>
       <member-card
         class="col-span-2"
@@ -39,7 +47,7 @@
 </template>
 
 <script setup>
-  const props = defineProps(['partial-offices']);
+const props = defineProps(['partial-offices', 'member-state']);
 </script>
 
 <style scoped>

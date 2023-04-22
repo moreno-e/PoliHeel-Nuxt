@@ -2,33 +2,23 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true,
+    node: true
   },
-  extends: ['@nuxtjs/eslint-config-typescript', 'plugin:prettier/recommended'],
+  extends: ['@nuxtjs/eslint-config-typescript'],
   parser: 'vue-eslint-parser',
   parserOptions: {
-    parser: '@typescript-eslint/parser',
+    parser: '@typescript-eslint/parser'
   },
   overrides: [
     {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)',
-      ],
+      files: ['**/__tests__/*.{j,t}s?(x)', '**/tests/unit/**/*.spec.{j,t}s?(x)'],
       env: {
-        jest: true,
-      },
-    },
+        jest: true
+      }
+    }
   ],
   rules: {
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        bracketSameLine: true,
-        vueIndentScriptAndStyle: true,
-      },
-    ],
+    indent: [0, 'spaces'],
     'block-spacing': 'error',
     'comma-spacing': ['error', { before: false, after: true }],
     'eol-last': ['error', 'always'],
@@ -49,8 +39,8 @@ module.exports = {
       {
         blankLine: 'any',
         prev: ['const', 'let', 'var'],
-        next: ['const', 'let', 'var'],
-      },
+        next: ['const', 'let', 'var']
+      }
     ],
     'prefer-const': 'error',
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
@@ -59,7 +49,7 @@ module.exports = {
     'space-before-blocks': 'error',
     'space-before-function-paren': [
       'error',
-      { anonymous: 'never', named: 'never', asyncArrow: 'always' },
+      { anonymous: 'never', named: 'never', asyncArrow: 'always' }
     ],
     'space-unary-ops': ['error', { words: true, nonwords: false }],
     'spaced-comment': ['error', 'always'],
@@ -67,19 +57,26 @@ module.exports = {
       'error',
       {
         singleline: 'never',
-        multiline: 'never',
-      },
+        multiline: 'never'
+      }
+    ],
+    'vue/first-attribute-linebreak': [
+      'error',
+      {
+        singleline: 'ignore',
+        multiline: 'below'
+      }
     ],
     'vue/max-attributes-per-line': [
       'error',
       {
         singleline: {
-          max: 2,
+          max: 1
         },
         multiline: {
-          max: 1,
-        },
-      },
-    ],
-  },
+          max: 1
+        }
+      }
+    ]
+  }
 };
