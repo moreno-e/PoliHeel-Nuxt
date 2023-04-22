@@ -27,7 +27,7 @@
     queriedState: ''
   });
 
-  // if there is an error with IPStack call use default zipcode
+  // If there is an error with IPStack call use default Zip Code
   const defaultZipCodes = [
     { stateOfZipCode: 'Texas', zipCode: 77449 },
     { stateOfZipCode: 'New York', zipCode: 11368 },
@@ -40,9 +40,8 @@
     return defaultZipCodes[rndInt];
   };
 
-  // ipstack call
+  // IPstack call - use for PROD only
   try {
-    // reduce amount of calls for dev
     if (process.env.NODE_ENV === state.processProd) {
       const { data, error: ipStackError } = await useFetch('/api/ipstack');
 
@@ -55,16 +54,14 @@
   } catch (error) {
     console.error(error);
   } finally {
-    // will have to pull zip code & state
     const defaultStateZip = defaultRandomZipCode();
-
     const { stateOfZipCode, zipCode } = defaultStateZip;
 
-    state.queriedZipCode = state.ipStackData || zipCode;
-    state.queriedState = stateOfZipCode;
+    state.queriedZipCode = state.ipStackData.zip || zipCode;
+    state.queriedState = state.ipStackData.region_name || stateOfZipCode;
   }
 
-  // google civic api call to fetch members of zipcode
+  // Google Civic API call to fetch members of Zip Code
   try {
     const { data } = await useFetch(`/api/googlecivic/`, {
       params: { zip: state.queriedZipCode }
@@ -125,7 +122,7 @@
 
   state.partialOffices = checkForMissingTitles();
 
-  // slice the members names to pass to wiki api for their image
+  // Slice the members names to pass to wiki api for their image
   const getWikiNameParams = () => {
     const params = state.partialOffices.map((office) => {
       if (!office.hasMember) { return ''; }
@@ -138,7 +135,7 @@
     return params;
   };
 
-  // fetch current member images
+  // Fetch current member images
   state.nameParams = getWikiNameParams();
   state.promises = [];
 
