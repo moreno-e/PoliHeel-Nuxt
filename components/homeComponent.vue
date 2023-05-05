@@ -20,37 +20,45 @@
     queriedState: ''
   });
 
-  // IPstack call - use for PROD only
-  try {
-    if (process.env.NODE_ENV === state.processProd) {
-      const { data, error: ipStackError } = await useFetch('/api/ipstack');
+  const fetchIPData = async () => {
+    // IPstack call - use for PROD only
+    try {
+      if (process.env.NODE_ENV === state.processProd) {
+        const { data, error: ipStackError } = await useFetch('/api/ipstack');
 
-      state.ipStackData = data;
+        state.ipStackData = data;
 
-      if (state.ipStackData & (state.ipStackData !== null)) {
-        throw new Error('ip fetch failed', { details: ipStackError });
+        if (state.ipStackData & (state.ipStackData !== null)) {
+          throw new Error('ip fetch failed', { details: ipStackError });
+        }
       }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      const defaultStateZip = defaultRandomZipCode();
+      const { stateOfZipCode, zipCode } = defaultStateZip;
+
+      state.queriedZipCode = state.ipStackData.zip || zipCode;
+      state.queriedState = state.ipStackData.region_name || stateOfZipCode;
     }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    const defaultStateZip = defaultRandomZipCode();
-    const { stateOfZipCode, zipCode } = defaultStateZip;
+  };
 
-    state.queriedZipCode = state.ipStackData.zip || zipCode;
-    state.queriedState = state.ipStackData.region_name || stateOfZipCode;
-  }
+  await fetchIPData();
 
-  // Google Civic API call to fetch members of Zip Code
-  try {
-    const { data } = await useFetch(`/api/googlecivic/`, {
-      params: { zip: state.queriedZipCode }
-    });
+  const fetchMemberCivicData = async () => {
+    // Google Civic API call to fetch members of Zip Code
+    try {
+      const { data } = await useFetch(`/api/googlecivic/`, {
+        params: { zip: state.queriedZipCode }
+      });
 
-    state.civicData = data;
-  } catch (error) {
-    console.error(error);
-  }
+      state.civicData = data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  await fetchMemberCivicData();
 
   const checkForMissingTitles = () => {
     const subsetOfOffices = [];
@@ -119,23 +127,32 @@
   state.nameParams = getWikiNameParams();
   state.promises = [];
 
-  for (const name of state.nameParams) {
-    const uri = `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages|pageterms&piprop=original&titles=${name}`;
+  const fetchWikiMemberData = async () => {
+    for (const name of state.nameParams) {
+      const uri = `https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2&prop=pageimages|pageterms&piprop=original&titles=${name}`;
 
-    state.promises.push(useFetch(uri));
-  }
+      state.promises.push(useFetch(uri));
+    }
 
-  state.responses = await Promise.all(state.promises);
+    state.responses = await Promise.all(state.promises);
+  };
 
-  for (const [index, response] of state.responses.entries()) {
-    const { data } = response;
-    const picture = ref(data);
+  await fetchWikiMemberData();
 
-    state.partialOffices[index].portrait = picture.value?.query?.pages[0].original ||
-      state.partialOffices[index]?.photoUrl || {
-        source: `https://images.unsplash.com/photo-1611010638643-051de75362ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2865&q=80`
-      };
-  }
+  const attachImgSrc = () => {
+    for (const [index, response] of state.responses.entries()) {
+      const { data } = response;
+      const picture = ref(data);
+
+      state.partialOffices[index].portrait = picture.value?.query?.pages[0].original ||
+        state.partialOffices[index]?.photoUrl || {
+          source: `https://images.unsplash.com/photo-1611010638643-051de75362ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2865&q=80`
+        };
+    }
+  };
+
+  attachImgSrc();
+
 </script>
 
 <style scoped>
